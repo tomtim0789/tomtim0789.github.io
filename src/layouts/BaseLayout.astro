@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import { SITE, NAV_LINKS } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav container">
+        <a href="/" class="brand">{SITE.title}</a>
+        <ul class="nav-links">
+          {
+            NAV_LINKS.map((link) => {
+              const isActive =
+                link.href === '/'
+                  ? currentPath === '/'
+                  : currentPath.startsWith(link.href);
+              return (
+                <li>
+                  <a
+                    href={link.href}
+                    class:list={['nav-link', { active: isActive }]}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} {SITE.author} · 由 <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a> 构建</p>
+    </footer>
+  </body>
+</html>

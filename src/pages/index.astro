@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../consts';
+import { formatDate } from '../utils';
+
+const recent = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 5);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <h1>你好，我是 {SITE.author} 👋</h1>
+    <p class="lead">
+      欢迎来到我的数字角落。这里记录我对技术、设计与生活的思考 ——
+      崇尚极简，专注内容本身。
+    </p>
+    <p class="hero-cta">
+      <a href="/projects">看看我的作品 →</a>
+      <a href="/about">关于我</a>
+    </p>
+  </section>
+
+  <section class="recent">
+    <div class="section-head">
+      <h2>最新文章</h2>
+      <a href="/blog" class="more">全部文章 →</a>
+    </div>
+    {
+      recent.length > 0 ? (
+        <ul class="post-list">
+          {recent.map((post) => (
+            <li class="post-item">
+              <a href={`/blog/${post.id}/`} class="post-link">
+                <span class="post-title">{post.data.title}</span>
+                <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+                  {formatDate(post.data.pubDate)}
+                </time>
+              </a>
+              {post.data.description && (
+                <p class="post-desc">{post.data.description}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="lead">还没有文章，去 <code>src/content/blog/</code> 写第一篇吧。</p>
+      )
+    }
+  </section>
+</BaseLayout>

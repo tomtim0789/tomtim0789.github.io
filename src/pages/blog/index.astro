@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../utils';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+// 按年份分组，做成简洁的归档列表
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.pubDate.getFullYear();
+  const group = byYear.get(year) ?? [];
+  group.push(post);
+  byYear.set(year, group);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<BaseLayout title="博客" description="所有文章归档。">
+  <header class="page-header">
+    <h1>博客</h1>
+    <p class="lead">共 {posts.length} 篇文章。</p>
+  </header>
+
+  {
+    years.map((year) => (
+      <section class="year-group">
+        <h2 class="year">{year}</h2>
+        <ul class="post-list">
+          {byYear.get(year)!.map((post) => (
+            <li class="post-item">
+              <a href={`/blog/${post.id}/`} class="post-link">
+                <span class="post-title">{post.data.title}</span>
+                <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+                  {formatDate(post.data.pubDate)}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</BaseLayout>

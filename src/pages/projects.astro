@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROJECTS } from '../consts';
+---
+
+<BaseLayout title="作品集" description="我做过的一些项目与作品。">
+  <header class="page-header">
+    <h1>作品集</h1>
+    <p class="lead">一些我独立完成或参与的项目。</p>
+  </header>
+
+  <ul class="project-grid">
+    {
+      PROJECTS.map((project) => (
+        <li class="project-card">
+          <div class="project-head">
+            <h2 class="project-title">{project.title}</h2>
+            <span class="project-year">{project.year}</span>
+          </div>
+          <p class="project-desc">{project.description}</p>
+          <div class="project-tags">
+            {project.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+          {project.link && (
+            <a
+              class="project-link"
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              查看项目 →
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
