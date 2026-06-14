@@ -29,7 +29,8 @@ jobs:
         # astro build，并写入 .nojekyll，避免 GitHub Pages 的 Jekyll
         # 忽略掉 Astro 的 _astro/ 资源目录
         uses: withastro/action@v3
-        # with:
+        with:
+              package-manager: npm
         #   path: .            # Astro 项目根目录（默认就是仓库根目录）
         #   node-version: 20   # 构建用的 Node 版本（默认 20）
         #   package-manager: npm  # 一般无需指定，会按 lockfile 自动识别
