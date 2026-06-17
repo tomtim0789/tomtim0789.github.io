@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           
       - name: Build with Astro
         # 官方 Action：自动安装依赖（按 lockfile 识别为 npm）、运行
@@ -37,9 +37,9 @@ jobs:
         uses: withastro/action@v3
         with:
           package-manager: npm
-          node-version: 20
+          node-version: 22
         #   path: .            # Astro 项目根目录（默认就是仓库根目录）
-        #   node-version: 20   # 构建用的 Node 版本（默认 20）
+        #   node-version: 22   # 构建用的 Node 版本（默认 20）
         #   package-manager: npm  # 一般无需指定，会按 lockfile 自动识别
 
   deploy:
